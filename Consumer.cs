@@ -11,51 +11,33 @@ namespace Task03
             Console.WriteLine("  Consumer created in thread {0}", Thread.CurrentThread.ManagedThreadId);
             while (true) 
             {
+                Program.semNotEmpty.Wait();
                 if (ct.IsCancellationRequested)
                 {
                     Console.WriteLine("Task {0} cancelled", Thread.CurrentThread.ManagedThreadId);
                     ct.ThrowIfCancellationRequested();
                 }
-
                 Program.mutexIn.WaitOne();
-                Program.mutexRead.WaitOne();
-                
-                if ((++Program.readCount) == 1)
-                {
-                    Program.semW.Wait();
-                }
-
-                Program.mutexRead.ReleaseMutex();
+                int delay = Consume();
                 Program.mutexIn.ReleaseMutex();
-
-                Consume();
-
-                Program.mutexRead.WaitOne();
-
-                if ((--Program.readCount) == 0)
-                {
-                    Program.semW.Release();
-                }
-
-                Program.mutexRead.ReleaseMutex();
-                Thread.Sleep(1000 * Setup.sleepInSec);
+                Thread.Sleep(1000 * delay);
             }
         }
 
-        void Consume()
+        private int Consume()
         {
             int id;
-            if (Data.list.Any())
+            if (Data<int>.list.Any())
             {
-                id = Data.list[0];
-                Data.list.RemoveAt(0);
+                id = Data<int>.list[0];
+                Data<int>.list.RemoveAt(0);
             }
             else
             {
                 id = -1;
             }
-
             Console.WriteLine("  Consumed {0} by thread {1}", id, Thread.CurrentThread.ManagedThreadId);
+            return id;
         }
     }
 }

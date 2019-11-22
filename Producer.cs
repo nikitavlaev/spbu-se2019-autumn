@@ -8,7 +8,6 @@ namespace Task03
         public Producer(CancellationToken ct)
         {
             Console.WriteLine("  Producer created in thread {0}", Thread.CurrentThread.ManagedThreadId);
-            int i = 0;
             while(true) 
             {
                 if (ct.IsCancellationRequested)
@@ -16,24 +15,22 @@ namespace Task03
                     Console.WriteLine("Task {0} cancelled", Thread.CurrentThread.ManagedThreadId);
                     ct.ThrowIfCancellationRequested();
                 }
-                
-                i++;
+
                 Program.mutexIn.WaitOne();
-                Program.semW.Wait();
-
-                Produce(Thread.CurrentThread.ManagedThreadId * 1000 + i);
-
-                Program.semW.Release();
+                int delay = Produce();
+                Program.semNotEmpty.Release();
                 Program.mutexIn.ReleaseMutex();
                 
-                Thread.Sleep(1000 * Setup.sleepInSec);
+                Thread.Sleep(1000 * delay);
             }
         }
 
-        void Produce(int id)
+        private int Produce()
         {
-            Data.list.Add(id);
-            Console.WriteLine("  Produced {0} by thread {1}", id, Thread.CurrentThread.ManagedThreadId);
+            int id = Thread.CurrentThread.ManagedThreadId;
+            Data<int>.list.Add(id);
+            Console.WriteLine("  Produced {0} by thread {1}", id, id);
+            return id;
         }
     }
 }

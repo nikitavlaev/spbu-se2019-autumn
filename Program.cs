@@ -7,29 +7,29 @@ using System.Threading.Tasks;
 
 namespace Task03
 {
-    class Program
+    public class Program
     {
-        public static int readCount = 0;
-
         public static Mutex mutexIn = new Mutex(initiallyOwned: false);
-        public static Mutex mutexRead = new Mutex(initiallyOwned: false);
-        public static SemaphoreSlim semW = new SemaphoreSlim(1, 1);
+        public static SemaphoreSlim semNotEmpty = new SemaphoreSlim(0, Int32.MaxValue);
 
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Console.WriteLine("Start");
-            Data data = new Data();
+            Data<int> data = new Data<int>();
             Task[] producers = new Task[Setup.producersNum];
             Task[] consumers = new Task[Setup.consumersNum];
 
+            //necessary setup to cancel with a help of tokens
             var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
 
+            //run producers constructors
             for (int i = 0; i < Setup.producersNum; i++)
             {
                 producers[i] = Task.Run(() => new Producer(token), token);
             }
 
+            //run consumers constructors
             for (int i = 0; i < Setup.consumersNum; i++)
             {
                 consumers[i] = Task.Run(() => new Consumer(token), token);
@@ -38,30 +38,33 @@ namespace Task03
             Console.ReadKey();
             Console.WriteLine("Cancelling");
             tokenSource.Cancel();
+            
+            //release half of the semaphore amount to avoid SemaphoreFullException
+            semNotEmpty.Release(Int32.MaxValue/2);
+            
             try
             {
                 await Task.WhenAll(Misc.ConcatTasks(producers, consumers));
             }
+            //exception is thrown to break out of loops
             catch (OperationCanceledException)
             {
-                Console.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
+                Console.WriteLine($"\n{nameof(OperationCanceledException)} thrown, finishing\n");
             }
             finally
             {
                 tokenSource.Dispose();
             }
-
-            // Task.WaitAll(Misc.ConcatTasks(producers, consumers));
         }
     }
 
-    class Data
+    class Data<T>
     {
         public Data()
         {
-            list = new List<int>();
+            list = new List<T>();
         }
 
-        public static List<int> list;
+        public static List<T> list;
     }
 }
