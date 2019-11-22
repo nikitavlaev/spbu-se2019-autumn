@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,7 +10,7 @@ namespace Task04
 {
     public class HTMLInteraction
     {
-        public static String GetHTMLbyURL(String urlAddress)
+        public static String GetHTMLbyUrl(String urlAddress)
         {
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create(urlAddress);
             HttpWebResponse response = (HttpWebResponse) request.GetResponse();
@@ -38,20 +39,18 @@ namespace Task04
             return "";
         }
 
-        public static List<String> getURLs(String initialURL)
+        public static List<String> getUrls(String initialUrl)
         {
             String page = "";
             try
             {
-                page = HTMLInteraction.GetHTMLbyURL(initialURL);
+                page = HTMLInteraction.GetHTMLbyUrl(initialUrl);
             }
             catch (WebException)
             {
-                Console.WriteLine("URL {0} is not valid", initialURL);
-                Environment.Exit(1);
+                Console.WriteLine("Url {0} is not valid", initialUrl);
+                return Enumerable.Empty<string>().ToList();
             }
-
-            Console.WriteLine("Start");
 
             var anchorRegex = new Regex(
                 @"<a ([^>])*href=""(http|https)://(\S*)""([^>])*>");
@@ -63,13 +62,13 @@ namespace Task04
             {
                 String anchor = match.Groups[0].Value;
                 Match linkMatch = urlRegex.Match(anchor);
-                String linkedURL = linkMatch.Groups[0].Value;
-                if (linkedURL == "")
+                String linkedUrl = linkMatch.Groups[0].Value;
+                if (linkedUrl == "")
                 {
                     continue;
                 }
 
-                urls.Add(linkedURL);
+                urls.Add(linkedUrl);
             }
 
             return urls;

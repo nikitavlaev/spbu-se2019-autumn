@@ -7,39 +7,71 @@ namespace Task04
 {
     class Program
     {
-        public static String GetData(String linkedURL)
+        private static void ProcessUrlTop(string initialUrl)
         {
-            return HTMLInteraction.GetHTMLbyURL(linkedURL);
+            List<string> urls = HTMLInteraction.getUrls(initialUrl);
+            foreach (String url in urls)
+            {
+                ProcessUrlLeaf(url);
+            }
         }
-
-        private static Task ProcessURL(String url)
+        
+        private static async void ProcessUrlLeaf(string initialUrl)
         {
-            return Task.Run(() => { Console.WriteLine("URL: {0}, Symbols count: {1}", url, GetData(url).Length); }
+            await Task.Run(() =>
+                {
+                    try
+                    {
+                        List<string> urls = HTMLInteraction.getUrls(initialUrl);
+                        foreach (String url in urls)
+                        {
+                            Console.WriteLine(
+                                "Top Url: {0}, LeafUrl: {1}, symbols: {2}",
+                                initialUrl,
+                                url,
+                                HTMLInteraction.GetHTMLbyUrl(url).Length
+                            );
+                        }
+                    }
+                    catch (WebException)
+                    {
+                        Console.WriteLine("Url is not valid or connection problem happened");
+                        return;
+                    }
+                    catch (ArgumentException)
+                    {
+                        Console.WriteLine("Url unsupported");
+                        return;
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Console.WriteLine("No response");
+                    }
+                }
             );
         }
 
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            String initialURL = args[0];
-            List<String> urls = HTMLInteraction.getURLs(initialURL);
+            String initialUrl = args[0];
+            List<String> urls = HTMLInteraction.getUrls(initialUrl);
+            Console.WriteLine("Start");
             try
             {
                 List<Task> tasks = new List<Task>();
                 foreach (String url in urls)
                 {
-                    tasks.Add(ProcessURL(url));
+                    ProcessUrlTop(url);
                 }
-
-                await Task.WhenAll(tasks.ToArray());
             }
             catch (WebException)
             {
-                Console.WriteLine("URL is not valid or connection problem happened");
+                Console.WriteLine("Url is not valid or connection problem happened");
                 return;
             }
             catch (ArgumentException)
             {
-                Console.WriteLine("URL unsupported");
+                Console.WriteLine("Url unsupported");
                 return;
             }
             catch (OperationCanceledException)
