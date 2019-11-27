@@ -1,82 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
-namespace Task04
+namespace Task02
 {
     class Program
     {
-        private static void ProcessUrlTop(string initialUrl)
+        static void Main()
         {
-            List<string> urls = HTMLInteraction.getUrls(initialUrl);
-            foreach (String url in urls)
-            {
-                ProcessUrlLeaf(url);
-            }
-        }
-        
-        private static async void ProcessUrlLeaf(string initialUrl)
-        {
-            await Task.Run(() =>
-                {
-                    try
-                    {
-                        List<string> urls = HTMLInteraction.getUrls(initialUrl);
-                        foreach (String url in urls)
-                        {
-                            Console.WriteLine(
-                                "Top Url: {0}, LeafUrl: {1}, symbols: {2}",
-                                initialUrl,
-                                url,
-                                HTMLInteraction.GetHTMLbyUrl(url).Length
-                            );
-                        }
-                    }
-                    catch (WebException)
-                    {
-                        Console.WriteLine("Url is not valid or connection problem happened");
-                        return;
-                    }
-                    catch (ArgumentException)
-                    {
-                        Console.WriteLine("Url unsupported");
-                        return;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Console.WriteLine("No response");
-                    }
-                }
-            );
-        }
+            Graph.GenerateGraph(AppDomain.CurrentDomain.BaseDirectory + "/2.in",
+                Constants.VerticesNumber,
+                Constants.VerticesNumber * (Constants.VerticesNumber - 1) / 2,
+                100);
 
-        public static void Main(string[] args)
-        {
-            String initialUrl = args[0];
-            List<String> urls = HTMLInteraction.getUrls(initialUrl);
-            Console.WriteLine("Start");
-            try
+            var edgesArray = Graph.LoadArrayGraph(AppDomain.CurrentDomain.BaseDirectory + "/2.in");
+
+            //create distinct arrays to make fair estimations
+            var edgesArray1 = new Graph.Edge[edgesArray.Length];
+            Array.Copy(edgesArray, edgesArray1, edgesArray.Length);
+            var edgesArray2 = new Graph.Edge[edgesArray.Length];
+            Array.Copy(edgesArray, edgesArray2, edgesArray.Length);
+
+            Console.WriteLine("generated");
+            Stopwatch timer1 = Stopwatch.StartNew();
+            var a = Kruskal.RunSeqKruskal(Constants.VerticesNumber, edgesArray1);
+            // var a = Floyd.RunSeqFloyd(graphMatrix);
+            // var a = Prim.RunSeqPrim(graphMatrix);
+            timer1.Stop();
+            Console.WriteLine("Прошло: {0} мс.",
+                timer1.ElapsedMilliseconds);
+
+            Stopwatch timer2 = Stopwatch.StartNew();
+            var b = Kruskal.RunParallelKruskal(Constants.VerticesNumber, edgesArray2);
+            // var b = Floyd.RunSeqFloyd(graphMatrix);
+            // var b = Prim.RunParallelPrim(graphMatrix);
+            timer2.Stop();
+            Console.WriteLine("Прошло: {0} мс.",
+                timer2.ElapsedMilliseconds);
+            
+            //validate results
+            for (int i = 0; i < a.Length; i++)
             {
-                List<Task> tasks = new List<Task>();
-                foreach (String url in urls)
-                {
-                    ProcessUrlTop(url);
-                }
-            }
-            catch (WebException)
-            {
-                Console.WriteLine("Url is not valid or connection problem happened");
-                return;
-            }
-            catch (ArgumentException)
-            {
-                Console.WriteLine("Url unsupported");
-                return;
-            }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine("No response");
+                if (a[i].weight != b[i].weight) Console.WriteLine(a[i].weight == b[i].weight);
             }
         }
     }
