@@ -71,10 +71,8 @@ namespace Task02
                 {
                     i = rand.Next(verticesNumber - 1);
                     j = rand.Next(i + 1, verticesNumber);
-                    // Console.WriteLine("search");
                 } while (graphMatrix[i, j] != -1);
-
-                //       Console.WriteLine("found {0} {1}", i,j);
+                
                 int value = rand.Next(1, valueRange);
                 graphMatrix[i, j] = value;
                 graphMatrix[j, i] = value;

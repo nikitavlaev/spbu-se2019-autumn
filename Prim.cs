@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Task02
 {
@@ -85,8 +83,6 @@ namespace Task02
                     }
                 }, tt);
             }
-
-            ;
             allDoneMin.WaitOne();
 
             int min = Int32.MaxValue, minIndex = -1;
@@ -131,7 +127,6 @@ namespace Task02
             for (int count = 0; count < verticesNumber - 1; count++)
             {
                 int u = ParallelMinKey(verticesNumber, key, mstSet, chunkNum, chunkSizes, allDoneMin);
-                //int u = MinKey(verticesNumber, key, mstSet);
                 mstSet[u] = true;
                 int amount = 0;
                 for (int t = 0; t < chunkNum; t++)
