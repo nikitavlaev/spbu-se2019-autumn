@@ -9,7 +9,7 @@ namespace Task02
 
         public static void Swap(long i, long j)
         {
-            // Swap two element in an _edgesArrayay with given indexes.
+            // Swap two element in an _edgesArray with given indexes.
             var temp = _edgesArray[i];
             _edgesArray[i] = _edgesArray[j];
             _edgesArray[j] = temp;
@@ -36,25 +36,8 @@ namespace Task02
             Swap(i + 1, high);
             return (i + 1);
         }
-
-        public static void QuickSort(long lo, long hi)
-        {
-            //Console.Write("{0} {1} ", lo, hi);
-            if (lo >= hi)
-            {
-               // Console.WriteLine();
-                return;
-            }
-
-            long p = Partition(lo, hi);
-          //  Console.WriteLine("{0} {1}", p, _edgesArray[p + 1].weight);
-            QuickSort(lo, p - 1);
-            QuickSort(p + 1, hi);
-        }
-
         public static void QuickSortIterative(long lo, long hi)
         {
-            //Stack<long> stack = new Stack<long>();
             if (lo >= hi) return;
             long[] stack = new long[4 * hi];
             long top = 0;
@@ -104,11 +87,6 @@ namespace Task02
         public static void StartQuickSortSeq(ref Graph.Edge[] edges)
         {
             _edgesArray = edges;
-//            for (int i = 0; i < edges.Length; i++)
-//            {
-//                Console.Write("{0} ", _edgesArray[i].weight);
-//            }
-//            Console.WriteLine();
             QuickSortIterative(0, edges.Length - 1);
             edges = _edgesArray;
         }

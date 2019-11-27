@@ -17,10 +17,6 @@ namespace Task02
                     min = key[v];
                     minIndex = v;
                 }
-
-            //    Console.Write("{0}", min);
-            if (minIndex == -1)
-                Console.WriteLine("SCREAM");
             return minIndex;
         }
 
@@ -92,15 +88,6 @@ namespace Task02
 
             ;
             allDoneMin.WaitOne();
-//            Parallel.For(0, verticesNumber, v =>
-//            {
-//                int id = Thread.CurrentThread.ManagedThreadId;
-//                if (mstSet[v] == false && key[v] < mins[id])
-//                {
-//                    mins[id] = key[v];
-//                    minIndices[id] = v;
-//                }
-//            });
 
             int min = Int32.MaxValue, minIndex = -1;
             for (int t = 0; t < chunkNum; t++)
@@ -111,8 +98,7 @@ namespace Task02
                     minIndex = minIndices[t];
                 }
             }
-
-            //   Console.WriteLine(" - trueMin, {1} - gotMin, {2} - trueMinIndex, {0} - gotMinIndex,", minIndex, min, trueRes);
+            
             return minIndex;
         }
 
@@ -173,29 +159,6 @@ namespace Task02
                 }
 
                 allDone.WaitOne();
-
-
-//                Parallel.For(0, verticesNumber, v =>
-//                {
-//                    if ((graphMatrix[u, v] != (-1)) 
-//                        && mstSet[v] == false
-//                        && graphMatrix[u, v] < key[v])
-//                    {
-//                        prev[v] = u;
-//                        key[v] = graphMatrix[u, v];
-//                    }
-//                });
-
-//                for (int v = 0; v < verticesNumber; v++)
-//                {
-//                    if (graphMatrix[u, v] != (-1)
-//                        && mstSet[v] == false
-//                        && graphMatrix[u, v] < key[v])
-//                    {
-//                        prev[v] = u;
-//                        key[v] = graphMatrix[u, v];
-//                    }
-//                }
             }
 
             return prev;
