@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
 namespace Task05
 {
-    /*abstract*/ 
-    public class BST<T>
+    public class BSTFineGrained<T>
     {
         protected Node<T> root = null;
 
