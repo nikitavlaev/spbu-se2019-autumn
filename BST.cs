@@ -1,35 +1,100 @@
 ﻿using System;
 using System.Collections.Generic;
+using Task05;
 
-namespace Task05
+namespace Task5
 {
-    /*abstract*/ 
+    /*abstract*/
     public class BST<T>
     {
-        protected Node<T> root = null;
+        protected internal Node<T> root = null;
 
-        public virtual void Insert(int key, T value)
+        private int Height(Node<T> node)
         {
-            root = UpdateTree(null, root, key, value);
-        }
-
-        protected Node<T> UpdateTree(Node<T> parent, Node<T> currentNode, int key, T value)
-        {
-            if (currentNode == null)
+            if (node == null)
             {
-                return new Node<T>(parent, key, value);
+                return 0;
             }
             else
             {
-                if (currentNode.key > key)
+                return 1 + Math.Max(Height(node.left), Height(node.right));
+            }
+        }
+
+        public void Show()
+        {
+            int height = Height(root);
+            ShowNode(root, 0);
+        }
+
+        public BST()
+        {
+        }
+
+        public BST(IEnumerable<(int, T)> elements)
+        {
+            foreach (var pair in elements)
+            {
+                Insert(pair.Item1, pair.Item2);
+            }
+        }
+        private static void ShowNode(Node<T> node, int space)
+        {
+            // Base case  
+            if (node == null)
+                return;
+
+            // Increase distance between levels  
+            space += 10;
+
+            // Process right child first  
+            ShowNode(node.right, space);
+
+            // Print current node after space  
+            // count  
+            Console.Write("\n");
+            for (int i = 10; i < space; i++)
+                Console.Write(" ");
+            Console.Write(node.key + "\n");
+
+            // Process left child  
+            ShowNode(node.left, space);
+        }
+
+        public virtual void Insert(int key, T value)
+        {
+            UpdateTree(null, root, key, value, true);
+        }
+
+        protected void UpdateTree(Node<T> parent, Node<T> currentNode, int key, T value, bool leftChild)
+        {
+            if (currentNode == null)
+            {
+                if (parent == null)
                 {
-                    currentNode.left = UpdateTree(currentNode, currentNode.left, key, value);
-                    return currentNode;
+                    root = new Node<T>(parent, key, value);
+                    return;
+                }
+
+                if (leftChild)
+                {
+                    parent.left = new Node<T>(parent, key, value);
                 }
                 else
                 {
-                    currentNode.right = UpdateTree(currentNode, currentNode.right, key, value);
-                    return currentNode;
+                    parent.right = new Node<T>(parent, key, value);
+                }
+            }
+            else
+            {
+                if (currentNode.key == key) return;
+                if (currentNode.key > key)
+                {
+                    UpdateTree(currentNode, currentNode.left, key, value, true);
+                }
+                else
+                {
+                    UpdateTree(currentNode, currentNode.right, key, value, false);
                 }
             }
         }
@@ -89,8 +154,8 @@ namespace Task05
             else
             {
                 //replacement parent is not null, because it is not root
-                //remove replacement and with fixing links
-                
+                //remove replacement with fixing links
+
                 if (replacement.parent.left != null)
                 {
                     if (replacement.parent.left.key == replacement.key)

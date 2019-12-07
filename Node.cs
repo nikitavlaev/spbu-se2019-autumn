@@ -1,6 +1,15 @@
 ﻿namespace Task05
 {
-    public class Node<T>
+    public abstract class AbstractNode<T>
+    {
+        public int key;
+        public T value;
+        public AbstractNode<T> left;
+        public AbstractNode<T> right;
+        public AbstractNode<T> parent;
+      //  public abstract AbstractNode(AbstractNode<T> parent, int key, T value);
+    }
+    public class Node<T> : AbstractNode<T>
     {
         public int key;
         public T value;

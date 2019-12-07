@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Task5;
 
 namespace Task05
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            int size = 10;
+            int size = 5;
 
             BST<int> bst = new BST<int>();
 
@@ -33,12 +34,10 @@ namespace Task05
 
             foreach (var key in keys)
             {
-                bst.Insert(key, rnd.Next(1, Int32.MaxValue));
+                bst.Insert(key, rnd.Next(1, maxBound));
             }
             
-            Console.WriteLine(bst.Search(keys[2]));
-            Console.WriteLine();
-            bst.Delete(keys[2]);
+            bst.Show();
             Console.WriteLine();
         }
     }

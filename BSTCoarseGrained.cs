@@ -1,15 +1,27 @@
+using System.Collections.Generic;
 using System.Threading;
 
-namespace Task05
+namespace Task5
 {
     public class BSTCoarseGrained<T> : BST<T>
     {
-        private Mutex coarseMutex = new Mutex( false);
+        private Mutex coarseMutex = new Mutex(false);
+
+        public BSTCoarseGrained()
+        {
+        }
+        public BSTCoarseGrained(IEnumerable<(int, T)> elements)
+        {
+            foreach (var pair in elements)
+            {
+                Insert(pair.Item1, pair.Item2);
+            }
+        }
 
         public override void Insert(int key, T value)
         {
             coarseMutex.WaitOne();
-            root = UpdateTree(null, root, key, value);
+            UpdateTree(null, root, key, value, true);
             coarseMutex.ReleaseMutex();
         }
         
