@@ -20,31 +20,29 @@ namespace Task03
             Task[] consumers = new Task[Setup.consumersNum];
 
             //necessary setup to cancel with a help of tokens
-            var tokenSource = new CancellationTokenSource();
-            var token = tokenSource.Token;
-
+            var producersTokenSource = new CancellationTokenSource();
+            var consumersTokenSource = new CancellationTokenSource();
+            var producerToken = producersTokenSource.Token;
+            var consumersToken = consumersTokenSource.Token;
             //run producers constructors
             for (int i = 0; i < Setup.producersNum; i++)
             {
-                producers[i] = Task.Run(() => new Producer(token), token);
+                producers[i] = Task.Run(() => new Producer(producerToken), producerToken);
             }
 
             //run consumers constructors
             for (int i = 0; i < Setup.consumersNum; i++)
             {
-                consumers[i] = Task.Run(() => new Consumer(token), token);
+                consumers[i] = Task.Run(() => new Consumer(consumersToken), consumersToken);
             }
 
             Console.ReadKey();
             Console.WriteLine("Cancelling");
-            tokenSource.Cancel();
-            
-            //release half of the semaphore amount to avoid SemaphoreFullException
-            semNotEmpty.Release(Int32.MaxValue/2);
-            
+            producersTokenSource.Cancel();
+
             try
             {
-                await Task.WhenAll(Misc.ConcatTasks(producers, consumers));
+                await Task.WhenAll(producers);
             }
             //exception is thrown to break out of loops
             catch (OperationCanceledException)
@@ -53,7 +51,25 @@ namespace Task03
             }
             finally
             {
-                tokenSource.Dispose();
+                while (semNotEmpty.CurrentCount > 0);
+                semNotEmpty.Release(Int32.MaxValue);
+                consumersTokenSource.Cancel();
+                try
+                {
+                    await Task.WhenAll(consumers);
+                }
+                //exception is thrown to break out of loops
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine($"\n{nameof(OperationCanceledException)} thrown, finishing\n");
+                }
+                finally
+                {
+                    consumersTokenSource.Dispose();
+                }
+                producersTokenSource.Dispose();
+                semNotEmpty.Dispose();
+                mutexIn.Dispose();
             }
         }
     }

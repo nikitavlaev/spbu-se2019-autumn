@@ -2,8 +2,8 @@
 {
     public class Setup
     {
-        public const int producersNum = 20;
-        public const int consumersNum = 10;
+        public const int producersNum = 5;
+        public const int consumersNum = 3;
         public const int sleepInSec = 1;
     }
 }
