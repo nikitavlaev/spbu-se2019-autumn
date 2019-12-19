@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
-using Task05;
 
-namespace Task5
+namespace Task05
 {
     public class BSTFineGrained<T> :BST<T>
     {
@@ -23,6 +22,10 @@ namespace Task5
                 right = null;
                 this.parent = parent;
                 mutex = new Mutex(false);
+            }
+
+            ~FGNode() {
+                mutex.Close();
             }
         }
 

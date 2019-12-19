@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace Task5.CoarseTests
+namespace Task05.CoarseTests
 {
     [TestFixture]
     public class SearchTests

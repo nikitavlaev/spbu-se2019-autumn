@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Task5
+namespace Task05
 {
     public class BSTCoarseGrained<T> : BST<T>
     {
@@ -21,23 +21,42 @@ namespace Task5
         public override void Insert(int key, T value)
         {
             coarseMutex.WaitOne();
-            UpdateTree(null, root, key, value, true);
-            coarseMutex.ReleaseMutex();
+            try
+            {
+                UpdateTree(null, root, key, value, true);
+            }
+            finally
+            {
+                coarseMutex.ReleaseMutex();
+            }
         }
         
         public override T Search(int key)
         {
             coarseMutex.WaitOne();
-            T result = base.Search(key);
-            coarseMutex.ReleaseMutex();
+            T result = default(T);
+            try
+            {
+                result = base.Search(key);
+            }
+            finally
+            {
+                coarseMutex.ReleaseMutex();
+            }
             return result;
         }
 
         public override void Delete(int key)
         {
             coarseMutex.WaitOne();
-            base.Delete(key);
-            coarseMutex.ReleaseMutex();
+            try
+            {
+                base.Delete(key);
+            }
+            finally
+            {
+                coarseMutex.ReleaseMutex();
+            }
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Task05;
 
-namespace Task5
+namespace Task05
 {
     public class Utils
     {

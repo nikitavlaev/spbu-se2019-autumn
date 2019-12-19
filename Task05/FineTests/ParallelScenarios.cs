@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Task5.CoarseTests
+namespace Task05.FineTests
 {
     [TestFixture]
     public class ParallelScenarios
@@ -12,11 +12,11 @@ namespace Task5.CoarseTests
         private readonly Random _random = new Random();
         
         [TestCase(30, 1000, 1000, 10)]
-        public void InsertSearchConcurrently_ManyValuesToCoarseTree_UpdateTree(int workers, int maxSize, 
+        public void InsertSearchConcurrently_ManyValuesToFineTree_UpdateTree(int workers, int maxSize, 
             int maxValue, int maxTimeout)
         {
-            var expectedTree = new BSTCoarseGrained<int>();
-            var actualTree = new BSTCoarseGrained<int>();
+            var expectedTree = new BSTFineGrained<int>();
+            var actualTree = new BSTFineGrained<int>();
             var elementsToInsert = new ConcurrentQueue<(int,int)>();
             for (int i = 0; i < maxSize; ++i)
             {
@@ -67,11 +67,11 @@ namespace Task5.CoarseTests
         }
         
         [TestCase(30, 1000, 1000, 10)]
-        public void InsertSequentially_DeleteSearchConcurrently_ManyValuesToCoarseTree_UpdateTree(int workers, 
+        public void InsertSequentially_DeleteSearchConcurrently_ManyValuesToFineTree_UpdateTree(int workers, 
             int maxSize, int maxValue, int maxTimeout)
         {
-            var expectedTree = new BSTCoarseGrained<int>();
-            var actualTree = new BSTCoarseGrained<int>();
+            var expectedTree = new BSTFineGrained<int>();
+            var actualTree = new BSTFineGrained<int>();
             var elementsToInsert = new ConcurrentQueue<(int,int)>();
             var elementsToDelete = new ConcurrentQueue<(int,int)>();
             for (int i = 0; i < maxSize; ++i)
@@ -130,10 +130,10 @@ namespace Task5.CoarseTests
         }
         
         [TestCase(100, 10000, 10000, 10)]
-        public void InsertDeleteSearchConcurrently_ManyValuesToCoarseTree_UpdateTree(int workers, 
+        public void InsertDeleteSearchConcurrently_ManyValuesToFineTree_UpdateTree(int workers, 
             int maxSize, int maxValue, int maxTimeout)
         {
-            var actualTree = new BSTCoarseGrained<int>();
+            var actualTree = new BSTFineGrained<int>();
             var elementsToInsert = new ConcurrentQueue<(int,int)>();
             var elementsToDelete = new ConcurrentQueue<(int,int)>();
             for (int i = 0; i < maxSize; ++i)
@@ -201,10 +201,10 @@ namespace Task5.CoarseTests
         }
         
         [TestCase(30, 1000, 10000, 10)]
-        public void InsertSequentially_InsertSearchConcurrently_ManyValuesToCoarseTree_UpdateTree(int workers, 
+        public void InsertSequentially_InsertSearchConcurrently_ManyValuesToFineTree_UpdateTree(int workers, 
             int maxSize, int maxValue, int maxTimeout)
         {
-            var actualTree = new BSTCoarseGrained<int>();
+            var actualTree = new BSTFineGrained<int>();
             var elementsToInsertSeq = new ConcurrentQueue<(int,int)>();
             var elementsToInsertConcur = new ConcurrentQueue<(int,int)>();
             for (int i = 0; i < maxSize; ++i)

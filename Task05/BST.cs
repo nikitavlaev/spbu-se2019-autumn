@@ -1,33 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Task05;
 
-namespace Task5
+namespace Task05
 {
     /*abstract*/
     public class BST<T>
     {
         protected internal Node<T> root = null;
 
-        private int Height(Node<T> node)
-        {
-            if (node == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return 1 + Math.Max(Height(node.left), Height(node.right));
-            }
-        }
-
         public void Show()
         {
-            int height = Height(root);
             ShowNode(root, 0);
         }
 
-        public BST()
+        public BST() 
         {
         }
 
@@ -40,7 +26,6 @@ namespace Task5
         }
         private static void ShowNode(Node<T> node, int space)
         {
-            // Base case  
             if (node == null)
                 return;
 

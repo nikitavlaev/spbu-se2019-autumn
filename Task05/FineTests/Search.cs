@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Task05;
 
-namespace Task5.FineTests
+namespace Task05.FineTests
 {
     [TestFixture]
     public class SearchTests

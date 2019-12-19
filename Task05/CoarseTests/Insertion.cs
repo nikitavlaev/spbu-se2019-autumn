@@ -1,15 +1,14 @@
 using NUnit.Framework;
-using Task05;
 
-namespace Task5.FineTests
+namespace Task05.CoarseTests
 {
     [TestFixture]
     public class InsertionTests
     {
         [TestCase(0, 0)]
-        public void Insert_RootValueToEmptyFineTree_UpdateTree(int key, int value)
+        public void Insert_RootValueToEmptyCoarseTree_UpdateTree(int key, int value)
         {
-            var tree = new BSTFineGrained<int>();
+            var tree = new BSTCoarseGrained<int>();
 
             tree.Insert(key, value);
 
@@ -19,9 +18,9 @@ namespace Task5.FineTests
         }
 
         [TestCase(0, 0)]
-        public void Insert_ExistentValueToFineTree_ReturnSameTree(int key, int value)
+        public void Insert_ExistentValueToCoarseTree_ReturnSameTree(int key, int value)
         {
-            var tree = new BSTFineGrained<int>();
+            var tree = new BSTCoarseGrained<int>();
 
             tree.Insert(key, value);
             tree.Insert(key, value);
@@ -32,10 +31,10 @@ namespace Task5.FineTests
         }
 
         [TestCase(5, 5, 3, 3, 1, 1)]
-        public void Insert_InOrderLeftLeftToFineTree_UpdateTree(int rootKey, int rootValue, int leftKey,
+        public void Insert_InOrderLeftLeftToCoarseTree_UpdateTree(int rootKey, int rootValue, int leftKey,
             int leftValue, int leftOfLeftKey, int leftOfLeftValue)
         {
-            var tree = new BSTFineGrained<int>();
+            var tree = new BSTCoarseGrained<int>();
 
             tree.Insert(rootKey, rootValue);
             tree.Insert(leftKey, leftValue);
@@ -55,10 +54,10 @@ namespace Task5.FineTests
         }
 
         [TestCase(5, 5, 3, 3, 4, 4)]
-        public void Insert_InOrderLeftRightToFineTree_UpdateTree(int rootKey, int rootValue, int leftKey,
+        public void Insert_InOrderLeftRightToCoarseTree_UpdateTree(int rootKey, int rootValue, int leftKey,
             int leftValue, int rightOfLeftKey, int rightOfLeftValue)
         {
-            var tree = new BSTFineGrained<int>();
+            var tree = new BSTCoarseGrained<int>();
 
             tree.Insert(rootKey, rootValue);
             tree.Insert(leftKey, leftValue);
@@ -78,10 +77,10 @@ namespace Task5.FineTests
         }
 
         [TestCase(5, 5, 7, 7, 6, 6)]
-        public void Insert_InOrderRightLeftToFineTree_UpdateTree(int rootKey, int rootValue, int rightKey,
+        public void Insert_InOrderRightLeftToCoarseTree_UpdateTree(int rootKey, int rootValue, int rightKey,
             int rightValue, int leftOfRightKey, int leftOfRightValue)
         {
-            var tree = new BSTFineGrained<int>();
+            var tree = new BSTCoarseGrained<int>();
 
             tree.Insert(rootKey, rootValue);
             tree.Insert(rightKey, rightValue);
@@ -101,10 +100,10 @@ namespace Task5.FineTests
         }
 
         [TestCase(5, 5, 7, 7, 9, 9)]
-        public void Insert_InOrderRightRightToFineTree_UpdateTree(int rootKey, int rootValue, int rightKey,
+        public void Insert_InOrderRightRightToCoarseTree_UpdateTree(int rootKey, int rootValue, int rightKey,
             int rightValue, int rightOfRightKey, int  rightOfRightValue)
         {
-            var tree = new BSTFineGrained<int>();
+            var tree = new BSTCoarseGrained<int>();
 
             tree.Insert(rootKey, rootValue);
             tree.Insert(rightKey, rightValue);
